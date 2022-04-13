@@ -19,7 +19,13 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 #   }
 # }
 
+access_grant: can_view_orders_explore {
+  user_attribute: country
+  allowed_values: ["USA"]
+}
+
 explore: order_items {
+
   label: "Total Orders Analysis with Users"
   join: users {
     type: inner
