@@ -38,6 +38,13 @@ view: order_items {
     sql: ${TABLE}.delivered_at ;;
   }
 
+  dimension: order_id_no_actions {
+    label: "Order ID No Actions"
+    type: number
+    hidden: yes
+    sql: ${TABLE}.order_id ;;
+  }
+
   dimension: inventory_item_id {
     type: number
     # hidden: yes
@@ -130,6 +137,38 @@ view: order_items {
 
   measure: count {
     type: count
+    drill_fields: [detail*]
+  }
+
+  dimension: gross_margin {
+    label: "Gross Margin"
+    type: number
+    value_format_name: usd
+    sql: ${sale_price} - ${inventory_items.cost};;
+  }
+
+  measure: total_sale_price {
+    label: "Total Sale Price"
+    type: sum
+    value_format_name: usd
+    sql: ${sale_price} ;;
+    drill_fields: [detail*]
+  }
+
+  measure: total_gross_margin {
+    label: "Total Gross Margin"
+    type: sum
+    value_format_name: usd
+    sql: ${gross_margin} ;;
+    # drill_fields: [detail*]
+    drill_fields: [user_id, average_sale_price, total_gross_margin]
+  }
+
+  measure: average_sale_price {
+    label: "Average Sale Price"
+    type: average
+    value_format_name: usd
+    sql: ${sale_price} ;;
     drill_fields: [detail*]
   }
 

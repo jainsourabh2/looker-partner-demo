@@ -14,6 +14,13 @@ view: inventory_items {
     sql: ${TABLE}.cost ;;
   }
 
+  measure: total_cost {
+    label: "Total Cost"
+    type: sum
+    value_format_name: usd
+    sql: ${cost} ;;
+  }
+
   dimension_group: created {
     type: time
     timeframes: [

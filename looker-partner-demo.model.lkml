@@ -19,6 +19,13 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 #   }
 # }
 
+datagroup: ecommerce_etl {
+  sql_trigger: SELECT max(created_at) FROM ecomm.events ;;
+  max_cache_age: "24 hours"
+}
+
+persist_with: ecommerce_etl
+
 access_grant: can_view_orders_explore {
   user_attribute: country
   allowed_values: ["USA"]
@@ -32,4 +39,27 @@ explore: order_items {
     relationship: many_to_one
     sql_on: ${order_items.user_id} = ${users.id} ;;
   }
+
+  join: inventory_items {
+    view_label: "Inventory Items"
+    #Left Join only brings in items that have been sold as order_item
+    type: full_outer
+    relationship: one_to_one
+    sql_on: ${inventory_items.id} = ${order_items.inventory_item_id} ;;
+  }
+
+  join: order_facts {
+    type: left_outer
+    view_label: "Orders"
+    relationship: many_to_one
+    sql_on: ${order_facts.order_id} = ${order_items.order_id} ;;
+  }
+
+  join: user_order_facts {
+    view_label: "Users Facts"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${user_order_facts.user_id} = ${order_items.user_id} ;;
+  }
+
 }
