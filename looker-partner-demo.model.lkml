@@ -19,12 +19,12 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 #   }
 # }
 
-datagroup: ecommerce_etl {
-  sql_trigger: SELECT max(created_at) FROM ecomm.events ;;
+datagroup: ecommerce_etl_demo {
+  sql_trigger: SELECT max(created_at) FROM looker-private-demo.ecomm.order_items ;;
   max_cache_age: "24 hours"
 }
 
-persist_with: ecommerce_etl
+persist_with: ecommerce_etl_demo
 
 access_grant: can_view_orders_explore {
   user_attribute: country
